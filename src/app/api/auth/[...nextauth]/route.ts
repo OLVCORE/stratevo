@@ -4,7 +4,7 @@ import FacebookProvider from 'next-auth/providers/facebook'
 import LinkedInProvider from 'next-auth/providers/linkedin'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-export const authOptions = {
+const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -25,9 +25,8 @@ export const authOptions = {
         password: { label: "Senha", type: "password" }
       },
       async authorize(credentials) {
-        // Implemente sua lógica de autenticação aqui
         if (credentials?.email && credentials?.password) {
-          // Exemplo: autenticação fake
+          // Implemente aqui a lógica real de autenticação
           return { id: '1', name: 'Usuário', email: credentials.email }
         }
         return null
@@ -38,7 +37,6 @@ export const authOptions = {
     signIn: '/auth/signin',
     error: '/auth/signin'
   }
-}
+})
 
-const handler = NextAuth(authOptions)
 export { handler as GET, handler as POST } 
