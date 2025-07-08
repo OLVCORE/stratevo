@@ -7,16 +7,16 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 const handler = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID || 'PLACEHOLDER',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'PLACEHOLDER',
     }),
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID!,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+      clientId: process.env.FACEBOOK_CLIENT_ID || 'PLACEHOLDER',
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || 'PLACEHOLDER',
     }),
     LinkedInProvider({
-      clientId: process.env.LINKEDIN_CLIENT_ID!,
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
+      clientId: process.env.LINKEDIN_CLIENT_ID || 'PLACEHOLDER',
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET || 'PLACEHOLDER',
     }),
     CredentialsProvider({
       name: 'Credentials',
@@ -36,7 +36,8 @@ const handler = NextAuth({
   pages: {
     signIn: '/auth/signin',
     error: '/auth/signin'
-  }
+  },
+  secret: process.env.NEXTAUTH_SECRET || 'PLACEHOLDER'
 })
 
 export { handler as GET, handler as POST } 

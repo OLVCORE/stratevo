@@ -1,36 +1,36 @@
 import Stripe from 'stripe'
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_PLACEHOLDER', {
   apiVersion: '2023-10-16',
 })
 
 export const plans = {
-  freemium: {
+  free: {
     name: 'Freemium',
     price: 0,
     reportsLimit: 5,
-    features: ['5 relatórios/mês', 'Dados básicos', 'Exportação CSV']
+    features: ['Acesso básico', '5 relatórios/mês'],
   },
   standard: {
     name: 'Standard',
-    price: 9700, // R$ 97,00 em centavos
-    stripePriceId: 'price_standard_monthly',
+    price: 97,
+    stripePriceId: 'price_PLACEHOLDER_STANDARD',
     reportsLimit: 50,
-    features: ['50 relatórios/mês', 'Dados completos', 'Exportação PDF/Excel', 'Análise SWOT']
+    features: ['Acesso completo', '50 relatórios/mês'],
   },
   premium: {
     name: 'Premium',
-    price: 19700, // R$ 197,00 em centavos
-    stripePriceId: 'price_premium_monthly',
+    price: 197,
+    stripePriceId: 'price_PLACEHOLDER_PREMIUM',
     reportsLimit: 200,
-    features: ['200 relatórios/mês', 'Todas as features Standard', 'API access', 'Suporte prioritário']
+    features: ['Acesso premium', '200 relatórios/mês'],
   },
   pro: {
     name: 'Pro',
-    price: 39700, // R$ 397,00 em centavos
-    stripePriceId: 'price_pro_monthly',
+    price: 497,
+    stripePriceId: 'price_PLACEHOLDER_PRO',
     reportsLimit: 500,
-    features: ['500 relatórios/mês', 'Todas as features Premium', 'Relatórios personalizados', 'Consultoria']
+    features: ['Acesso PRO', '500 relatórios/mês'],
   },
   platinum: {
     name: 'Platinum',
