@@ -7,11 +7,11 @@ describe('exportToCSV', () => {
       { campo: 'Razão Social', valor: 'Empresa Exemplo' }
     ]
     // Simula o ambiente do browser
-    const createObjectURL = jest.fn()
+    const createObjectURL: jest.Mock = jest.fn()
     global.URL.createObjectURL = createObjectURL
 
     // Simula o clique
-    const click = jest.fn()
+    const click: jest.Mock = jest.fn()
     document.createElement = jest.fn().mockReturnValue({ setAttribute: jest.fn(), click })
 
     exportToCSV(data, 'teste.csv')

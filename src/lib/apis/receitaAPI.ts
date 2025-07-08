@@ -25,6 +25,7 @@ interface ReceitaData {
     nome: string
     qualificacao: string
   }>
+  link?: string
 }
 
 export async function getReceitaData(cnpj: string): Promise<ReceitaData | null> {
@@ -65,7 +66,8 @@ export async function getReceitaData(cnpj: string): Promise<ReceitaData | null> 
         quadro_socios: response.data.qsa?.map((socio: any) => ({
           nome: socio.nome,
           qualificacao: socio.qual
-        })) || []
+        })) || [],
+        link: response.data.link ?? undefined
       }
     }
 
@@ -102,7 +104,8 @@ export async function getReceitaData(cnpj: string): Promise<ReceitaData | null> 
           quadro_socios: brasilResponse.data.socios?.map((socio: any) => ({
             nome: socio.nome,
             qualificacao: socio.qualificacao
-          })) || []
+          })) || [],
+          link: brasilResponse.data.link ?? undefined
         }
       }
     } catch (brasilError) {

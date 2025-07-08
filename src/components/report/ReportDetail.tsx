@@ -106,7 +106,7 @@ export default function ReportDetail() {
     return Object.entries(data).map(([key, value]) => ({
       campo: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
       valor: typeof value === 'object' ? JSON.stringify(value) : String(value),
-      link: null // Implementar links quando necessário
+      link: value === null ? undefined : value
     }))
   }
 
