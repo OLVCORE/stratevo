@@ -1,3 +1,5 @@
+import { Parser as Json2csvParser } from 'json2csv'
+
 export function exportToCSV(data: any[], filename = 'relatorio.csv') {
   const csvRows = []
   // Cabeçalho
