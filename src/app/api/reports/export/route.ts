@@ -3,10 +3,9 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { connectDB } from '@/lib/db'
 import Report from '@/lib/models/Report'
-import { Parser as Json2csvParser } from 'json2csv'
-import * as XLSX from 'xlsx'
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
+import { exportToPDF } from '@/utils/exportToPDF'
+import { exportToCSV } from '@/utils/exportToCSV'
+import { exportToExcel } from '@/utils/exportToExcel'
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,62 +15,70 @@ export async function POST(request: NextRequest) {
     }
 
     const { reportId, format } = await request.json()
+    
+    if (!reportId || !format) {
+      return NextResponse.json(
+        { message: 'ID do relatório e formato são obrigatórios' },
+        { status: 400 }
+      )
+    }
+
     await connectDB()
-    const report = await Report.findById(reportId)
+    
+    const report = await Report.findOne({ 
+      _id: reportId, 
+      userId: session.user.email 
+    })
+    
     if (!report) {
-      return NextResponse.json({ message: 'Relatório não encontrado' }, { status: 404 })
+      return NextResponse.json(
+        { message: 'Relatório não encontrado' },
+        { status: 404 }
+      )
     }
 
-    // Estrutura de dados para exportação
-    const exportData = [
-      { campo: 'CNPJ', valor: report.cnpj },
-      { campo: 'Razão Social', valor: report.companyName },
-      // ...adicione outros campos relevantes
-    ]
+    let fileBuffer: Buffer
+    let filename: string
+    let contentType: string
 
-    if (format === 'csv') {
-      const parser = new Json2csvParser({ fields: ['campo', 'valor'] })
-      const csv = parser.parse(exportData)
-      return new NextResponse(csv, {
-        headers: {
-          'Content-Type': 'text/csv',
-          'Content-Disposition': `attachment; filename=relatorio-${report.cnpj}.csv`
-        }
-      })
+    switch (format) {
+      case 'pdf':
+        fileBuffer = await exportToPDF(report.data, `${report.companyName}_relatorio.pdf`)
+        filename = `${report.companyName}_relatorio.pdf`
+        contentType = 'application/pdf'
+        break
+        
+      case 'csv':
+        fileBuffer = await exportToCSV(report.data, `${report.companyName}_relatorio.csv`)
+        filename = `${report.companyName}_relatorio.csv`
+        contentType = 'text/csv'
+        break
+        
+      case 'excel':
+        fileBuffer = await exportToExcel(report.data, `${report.companyName}_relatorio.xlsx`)
+        filename = `${report.companyName}_relatorio.xlsx`
+        contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        break
+        
+      default:
+        return NextResponse.json(
+          { message: 'Formato não suportado' },
+          { status: 400 }
+        )
     }
 
-    if (format === 'excel') {
-      const worksheet = XLSX.utils.json_to_sheet(exportData)
-      const workbook = XLSX.utils.book_new()
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Relatório')
-      const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' })
-      return new NextResponse(buffer, {
-        headers: {
-          'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          'Content-Disposition': `attachment; filename=relatorio-${report.cnpj}.xlsx`
-        }
-      })
-    }
-
-    if (format === 'pdf') {
-      const doc = new jsPDF()
-      autoTable(doc, {
-        head: [['Campo', 'Valor']],
-        body: exportData.map(row => [row.campo, row.valor])
-      })
-      const pdf = doc.output('arraybuffer')
-      return new NextResponse(Buffer.from(pdf), {
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename=relatorio-${report.cnpj}.pdf`
-        }
-      })
-    }
-
-    return NextResponse.json({ message: 'Formato não suportado' }, { status: 400 })
+    return new NextResponse(fileBuffer, {
+      headers: {
+        'Content-Type': contentType,
+        'Content-Disposition': `attachment; filename="${filename}"`,
+      },
+    })
   } catch (error) {
     console.error('Erro ao exportar relatório:', error)
-    return NextResponse.json({ message: 'Erro interno do servidor' }, { status: 500 })
+    return NextResponse.json(
+      { message: 'Erro interno do servidor' },
+      { status: 500 }
+    )
   }
 }
 
