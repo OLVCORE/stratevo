@@ -2,9 +2,695 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design Tokens – STRATEVO Platform */
+/* --------------------------------------------------
+   Design Tokens – V2 (system colours)
+   -------------------------------------------------- */
+
 :root {
-  --color-primary: #1B3F8B;
+  /* DARK THEME (default) */
+  --color-primary: #0a58ca;        /* botões / links de ação */
+  --color-on-primary: #ffffff;
+
+  --color-accent: #e0c178;         /* detalhes dourados */
+
+  --color-background: #0d1117;     /* fundo principal */
+  --color-surface: #11161e;        /* cards / containers */
+  --color-on-surface: #d1d5db;     /* texto padrão */
+  --color-surface-light: #1a1f29; /* para cards escuros */
+  --color-accent-light: #c4a96b;  /* dourado suave no dark */
+
+  /* Opposite surface for modals */
+  --color-surface-opposite: #ffffff;
+  --color-on-surface-opposite: #1f2937;
+
+  /* Platform brand colours */
+  --stratevo-color: #1B3F8B;
+  --exceltta-color: #0F5F66;
+  --connecta-color: #0A2463;
+  --veritus-color: #5A2C45;
+  --finx-color: #1E6455;
+  --academy-color: #2C3C8B;
+  --labs-color: #4E3B76;
+  --core-color: #2A323F;
+  --engage-color: #6A3C63;
+
+  --card-bg: var(--color-surface);
+  --card-border: #1e293b;
+  --card-shadow: 0 1px 2px rgba(0,0,0,.1);
+
+  /* Spacing scale – 4-pt system */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+
+  /* Header height */
+  --height-header: 64px;
+
+  /* Altura fixa da barra de ticker (desktop) */
+  --height-ticker: 45px;
+
+  --olv-card-bg: var(--color-surface);
+  --olv-card-text: #0a2540;
+  --olv-card-meta: #0a2540cc;
+  --olv-card-heading: #0a2540;
+  --olv-card-img-bg: #e5e7eb;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* LIGHT THEME */
+    --color-primary: #0a58ca;
+    --color-on-primary: #ffffff;
+
+    --color-accent: #c79a30;
+
+    --color-background: #ffffff;
+    --color-surface: #f8fafc;
+    --color-on-surface: #1f2937;
+    --color-surface-light: #f1f5f9;
+    --color-accent-light: #f9eecd;
+
+    /* Opposite surface for modals */
+    --color-surface-opposite: #11161e;
+    --color-on-surface-opposite: #d1d5db;
+
+    /* Platform brand colours */
+    --stratevo-color: #2e59a8; /* 15% lighter */
+    --exceltta-color: #127e85;
+    --connecta-color: #123b9c;
+    --veritus-color: #7a4765;
+    --finx-color: #278a73;
+    --academy-color: #3c52b3;
+    --labs-color: #674f9f;
+    --core-color: #3f4d61;
+    --engage-color: #8a547e;
+
+    --card-bg: var(--color-surface);
+    --card-border: #e2e8f0;
+    --card-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+}
+
+/* ---------- Utility classes ---------- */
+.btn {
+  @apply inline-flex items-center justify-center font-medium rounded-md transition-colors;
+}
+.btn-primary {
+  @apply btn bg-primary text-on-primary hover:opacity-90;
+}
+
+/* Soft pulse animation */
+@keyframes pulseSoft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.animate-pulse-soft {
+  animation: pulseSoft 2s infinite ease-in-out;
+}
+
+/* ---------- Mobile Overrides ---------- */
+@media (max-width: 768px) {
+  /* Esconde elementos marcados para desktop */
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* Exibe toggle de plataformas */
+  .mobile-sidebar-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 60px;
+    left: 1rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-surface-light);
+    border: 1px solid var(--color-accent);
+    z-index: 2500;
+    color: var(--color-accent);
+  }
+  .mobile-sidebar-toggle img,
+  .mobile-nav-toggle svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Botão Mobile NAV principal */
+  .mobile-nav-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 120px;
+    left: 1rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-surface-light);
+    border: 1px solid var(--color-accent);
+    z-index: 2500;
+    color: var(--color-accent);
+  }
+
+  /* Overlay nav menu */
+  .nav-menu-mobile {
+    position: fixed;
+    top: var(--height-header);
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    padding: 1.75rem 1.25rem 2rem;
+    display: none;
+    flex-direction: column;
+    gap: 1.25rem;
+    z-index: 2400;
+    max-height: calc(100vh - var(--height-header));
+    overflow-y: auto;
+  }
+  .nav-menu-mobile.show {
+    display: flex;
+  }
+
+  .toggle-label {
+    font-size: 0.6rem;
+    line-height: 1;
+    margin-top: 2px;
+    color: var(--color-on-surface);
+  }
+
+  /* Oculta nav-menu padrão para evitar empilhamento */
+  .nav-menu {
+    display: none !important;
+  }
+
+  /* Sidebar slides in */
+  .sidebar {
+    position: fixed;
+    top: var(--height-header);
+    left: 0;
+    height: calc(100vh - var(--height-header));
+    width: 280px;
+    background: var(--color-surface);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 2400;
+    overflow-y: auto;
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  /* Hide sidebar header (desktop) duplicate */
+  .sidebar-header-mobile {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    font-weight: 600;
+  }
+  .sidebar-nav ul {
+    padding: 1rem;
+  }
+
+  .mobile-sidebar-toggle span {
+    display: none;
+  }
+
+  .nav-menu-mobile .nav-item {
+    font-size: 1.05rem;
+    color: var(--color-on-surface);
+  }
+  .nav-menu-mobile .nav-item.active {
+    color: var(--color-accent);
+  }
+
+  /* Overlay nav */
+  .nav-menu-mobile {
+    display: none !important;
+    pointer-events: none;
+  }
+  .nav-menu-mobile.show {
+    display: flex !important;
+    pointer-events: auto;
+  }
+  /* Ensure nav and platform buttons both visible */
+  .mobile-nav-toggle,
+  .mobile-sidebar-toggle {
+    z-index: 2600;
+  }
+
+  .theme-switch-wrapper {
+    display: none !important;
+  }
+
+  .header-wrapper {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: var(--height-header) !important;
+    background: var(--color-surface) !important;
+    border-bottom: 2px solid var(--color-accent) !important;
+    z-index: 2300 !important;
+  }
+
+  .header-inner {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 100% !important;
+    padding: 0 1rem !important;
+    position: relative !important;
+  }
+
+  /* Ajusta altura padrão do cabeçalho */
+  :root {
+    --height-header: 64px;
+  }
+
+  /* Logo menor e remove slogan */
+  .header-logo-circle {
+    width: 56px !important;
+    height: 56px !important;
+  }
+  .header-logo-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+  .header-slogan {
+    display: none !important;
+  }
+
+  /* Reexibe switch de tema como ícone compacto */
+  .theme-switch-wrapper {
+    display: flex !important;
+    position: absolute !important;
+    top: 50% !important;
+    right: 1rem !important;
+    transform: translateY(-50%) scale(0.9);
+  }
+
+  /* Ticker compacto */
+  .ticker {
+    height: 32px !important;
+  }
+  .ticker-inner p {
+    font-size: 0.75rem !important; /* 12px */
+  }
+
+  /* Header inner padding */
+  .header-inner {
+    padding-left: var(--space-4) !important; /* 16px */
+    padding-right: calc(var(--space-8) + 24px) !important; /* espaço p/ switch */
+  }
+
+  /* Logo alinhado sem colar na borda */
+  .header-logo-link {
+    padding-right: var(--space-4);
+  }
+
+  /* Força linha dourada full-width */
+  .header-wrapper {
+    border-bottom: 2px solid var(--color-accent) !important;
+  }
+
+  /* Ticker garantia de visibilidade */
+  .ticker {
+    display: flex !important;
+    align-items: center;
+    overflow: hidden;
+  }
+  .ticker-inner {
+    display: flex !important;
+  }
+
+  /* Botões flutuantes reposicionados no canto direito */
+  .mobile-nav-toggle {
+    bottom: 148px !important;
+    left: 1rem !important;
+    right: auto !important;
+  }
+  .mobile-sidebar-toggle {
+    bottom: 88px !important;
+    left: 1rem !important;
+    right: auto !important;
+    color: var(--color-accent) !important;
+  }
+  /* Ensure labels visible & positioned outside */
+  .mobile-nav-toggle .toggle-label,
+  .mobile-sidebar-toggle .toggle-label {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+    color: var(--color-accent) !important;
+    font-size: 0.6rem !important;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    display: block !important; /* override earlier hidden rule */
+  }
+
+  .mobile-nav-toggle .toggle-label {
+    top: calc(-100% + 28px) !important; /* place ~20px above bottom of circle */
+  }
+  .mobile-sidebar-toggle .toggle-label {
+    top: calc(100% + 6px) !important;  /* below button */
+  }
+
+  /* Reposiciona lupa para não sobrepor o switch */
+  .mobile-search-toggle {
+    position: absolute !important;
+    top: 50% !important;
+    right: 4.5rem !important; /* 72px: 16px padding + 48px switch + 8px gap */
+    transform: translateY(-50%);
+    z-index: 2350;
+  }
+
+  /* Remove margens anteriores (caso sobreponham) */
+  .theme-switch-wrapper {
+    margin-right: 0 !important;
+  }
+
+  /* Header greater top padding to avoid notch crop */
+  .header-wrapper {
+    padding-top: calc(env(safe-area-inset-top) + 4px);
+  }
+
+  /* Limit sidebar height */
+  .sidebar.mobile-open {
+    height: auto !important;
+    max-height: 85vh !important;
+  }
+}
+
+@layer base {
+  /* Mobile-first typography (applied up to md breakpoint) */
+  @media (max-width: 768px) {
+    h1 {
+      @apply text-[28px] leading-tight font-semibold text-on-surface;
+    }
+    h2 {
+      @apply text-[22px] leading-snug font-semibold text-on-surface;
+    }
+    h3 {
+      @apply text-[19px] leading-snug font-semibold text-on-surface;
+    }
+    p, li, span, a {
+      @apply text-[15px] leading-relaxed;
+    }
+  }
+}
+
+/* Ensure header is at top on mobile */
+@media (max-width: 768px) {
+  .header-wrapper {
+    top: 0 !important;
+    left: 0 !important;
+  }
+  .ticker {
+    top: var(--height-header) !important;
+    left: 0 !important;
+  }
+  .main-content {
+    margin-top: calc(var(--height-header) + 45px) !important;
+  }
+}
+
+/* === OLV MOBILE OVERRIDES – FINAL WINS ALL (duplicated here to guarantee last-in bundle) === */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none !important;
+    transform: translateX(-100%) !important;
+  }
+  .sidebar.mobile-open {
+    display: block !important;
+    transform: translateX(0) !important;
+  }
+
+  .nav-menu-mobile {
+    display: none !important;
+    pointer-events: none !important;
+  }
+  .nav-menu-mobile.show {
+    display: flex !important;
+    pointer-events: auto !important;
+  }
+
+  .header-wrapper {
+    top: 0 !important;
+    left: 0 !important;
+  }
+  .ticker {
+    top: var(--height-header) !important;
+    left: 0 !important;
+  }
+  .main-content {
+    margin-left: 0 !important;
+    margin-top: calc(var(--height-header) + 45px) !important;
+  }
+
+  .mobile-nav-toggle,
+  .mobile-sidebar-toggle,
+  .whatsapp-button {
+    z-index: 2600 !important;
+  }
+}
+
+.ticker {
+  display: flex !important;
+}
+
+/* Corrige classe real do logo */
+.logo-olv-padrao {
+  width: 56px !important;
+  height: 56px !important;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+/* Ticker fixo logo abaixo do header */
+.ticker {
+  position: fixed !important;
+  top: var(--height-header) !important;
+  left: 0 !important;
+  width: 100%;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-accent-light);
+  padding-left: var(--space-4);
+}
+
+/* Reposiciona botões: Menu à esquerda, Plataformas à direita */
+.mobile-nav-toggle {
+  bottom: 88px;
+  left: 1rem;
+  right: auto;
+}
+.mobile-sidebar-toggle {
+  bottom: 88px;
+  right: 1rem;
+  left: auto;
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.ticker-inner {
+  white-space: nowrap;
+}
+.ticker-inner p {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker-scroll 20s linear infinite;
+  margin: 0;
+}
+.ticker-inner p:hover {
+  animation-play-state: paused;
+}
+
+/* Sincroniza overlay/nav e sidebar */
+body.nav-open .sidebar {
+  display: none !important;
+}
+body.sidebar-open .nav-menu-mobile {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* ======== GLOBAL PREMIUM STYLING ======== */
+.header-wrapper {
+  background: var(--color-surface);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+/* Circular logo with golden glow */
+.logo-olv-padrao {
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-surface-light);
+  box-shadow: 0 0 4px rgba(224, 193, 120, 0.6);
+  transition: transform .25s ease;
+}
+.logo-olv-padrao:hover {
+  transform: scale(1.05);
+}
+
+/* Desktop ticker visuals (mobile already overridden) */
+.ticker {
+  width: 100%;
+  height: 40px;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-accent);
+  z-index: 2200;
+}
+.ticker-inner p {
+  font-size: 0.85rem;
+  color: var(--color-accent);
+}
+.ticker-inner a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+.ticker-inner a:hover {
+  opacity: 0.9;
+  text-decoration: underline;
+}
+
+/* Ensure body background always uses token */
+body {
+  background: var(--color-background);
+  color: var(--color-on-surface);
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background: var(--color-background);
+    color: var(--color-on-surface);
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-[color:var(--card-bg)] border border-[color:var(--card-border)] text-[color:var(--color-on-surface)] rounded-xl shadow-md p-[var(--space-6)] md:p-[var(--space-7)] flex flex-col gap-4 transition-transform duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_0_0_2px_var(--color-accent)] mb-6 md:mb-8;
+  }
+  .card-title {
+    @apply text-xl font-semibold text-on-surface;
+  }
+  .card-list {
+    @apply list-none flex flex-col gap-3;
+  }
+  .card-list-icon {
+    @apply inline-block mr-2 text-accent;
+  }
+  .shadow-md {
+    box-shadow: var(--card-shadow);
+  }
+
+  /* Mobile search overlay */
+  .search-overlay-mobile {
+    position: fixed;
+    top: var(--height-header);
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    padding: var(--space-6) var(--space-4);
+    z-index: 2400;
+  }
+
+  /* Theme switch modern look */
+  .theme-switch {
+    @apply relative inline-block w-12 h-6 align-middle select-none;
+  }
+  .theme-switch input {
+    @apply hidden;
+  }
+  .switch-inner {
+    @apply absolute top-0 left-0 w-full h-full bg-[color:var(--color-background)] border border-[color:var(--color-accent)] rounded-full transition-all;
+  }
+  .switch-inner::before {
+    content: "";
+    @apply absolute w-5 h-5 bg-[color:var(--color-accent)] rounded-full top-0.5 left-0.5 transition-transform;
+  }
+  input:checked + .switch-inner::before {
+    transform: translateX(24px);
+  }
+
+  /* Switch icon positions */
+  .switch-inner .moon-icon {
+    @apply absolute left-1 top-1 w-4 h-4 flex items-center justify-center;
+  }
+  .switch-inner .sun-icon {
+    @apply absolute right-1 top-1 w-4 h-4 flex items-center justify-center;
+  }
+
+  /* Space between theme switch and search */
+  .mobile-search-toggle {
+    margin-left: 0.75rem !important; /* 12px */
+  }
+
+  /* Ticker text colour harmonised */
+  .ticker-inner p {
+    color: var(--color-on-surface);
+  }
+  .ticker-inner a {
+    color: var(--color-accent);
+  }
+
+  /* Alias para cartões de plataformas, mantendo mesmo visual */
+  .platform-card {
+    @apply bg-[color:var(--card-bg)] border border-[color:var(--card-border)] text-[color:var(--color-on-surface)] rounded-xl shadow-md p-[var(--space-6)] md:p-[var(--space-7)] flex flex-col gap-4 transition-transform duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_0_0_2px_var(--color-accent)] mb-6 md:mb-8;
+  }
+
+  /* Platform card heading color for light theme */
+  body.theme-light .platform-card h3 {
+    color: var(--color-on-surface);
+  }
+}
+
+/* ================== THEME MODES via body class ================== */
+body.theme-light {
+  --color-primary: #0a58ca;
+  --color-on-primary: #ffffff;
+  --color-accent: #c79a30;
+  --color-background: #ffffff;
+  --color-surface: #f8fafc;
+  --color-on-surface: #1f2937;
+  --color-surface-light: #f1f5f9;
+  --color-accent-light: #f9eecd;
+  /* Platform brand colours */
+  --stratevo-color: #2e59a8;
+  --exceltta-color: #127e85;
+  --connecta-color: #123b9c;
+  --veritus-color: #7a4765;
+  --finx-color: #278a73;
+  --academy-color: #3c52b3;
+  --labs-color: #674f9f;
+  --core-color: #3f4d61;
+  --engage-color: #8a547e;
+  --card-bg: var(--color-surface);
+  --card-border: #e2e8f0;
+  --card-shadow: 0 1px 2px rgba(0,0,0,.04);
+
+  /* For componentes que ainda usam .text-white, force cor correta no tema claro */
+  .text-white {
+    color: var(--color-on-surface) !important;
+  }
+}
+body.theme-dark {
+  /* Duplicate defaults to guarantee override after light */
+  --color-primary: #0a58ca;
   --color-on-primary: #ffffff;
   --color-accent: #e0c178;
   --color-background: #0d1117;
@@ -12,13 +698,560 @@
   --color-on-surface: #d1d5db;
   --color-surface-light: #1a1f29;
   --color-accent-light: #c4a96b;
-  --stratevo-color: #1B3F8B;
-  --engage-color: #6A3C63;
+  /* brand colours already default */
   --card-bg: var(--color-surface);
-  --card-border: #1e293b;
-  --card-shadow: 0 1px 2px rgba(0,0,0,.1);
+  --card-border: #2e3545;
+  --card-shadow: 0 1px 2px rgba(0,0,0,.45);
 }
-body {
-  background: var(--color-background);
+
+/* ================== MOBILE HEADER REFINEMENTS ================== */
+@media (max-width: 768px) {
+  /* Respeita área segura de notch / status bar */
+  .header-wrapper {
+    padding-top: env(safe-area-inset-top);
+  }
+  /* Distanciamento switch → lupa */
+  .theme-switch-wrapper {
+    margin-right: 0.75rem !important; /* 12px */
+  }
+}
+
+/* ================== CONTAINER PADDING MOBILE ================== */
+@media (max-width: 768px) {
+  .container, .prose, .content-wrapper > .main-content {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+}
+
+/* Ticker colour in light theme for contrast */
+body.theme-light .ticker-inner p {
+  color: var(--color-primary);
+}
+
+/* old dark header override removed; header uses theme token below */
+/* body.theme-light .header-wrapper {
+  background: #11161e !important;
+} */
+
+/* ===== Updated Mobile Floating Buttons Position ===== */
+@media (max-width: 768px) {
+  .mobile-nav-toggle {
+    bottom: 96px !important; /* 6rem */
+  }
+  .mobile-sidebar-toggle {
+    bottom: 40px !important; /* 2.5rem */
+  }
+
+  /* Shift search icon further left */
+  .mobile-search-toggle {
+    right: 5.75rem !important; /* 92px */
+  }
+
+  /* Ensure search icon visible on light theme */
+  .mobile-search-toggle svg {
+    color: var(--color-accent) !important;
+  }
+
+  /* Extra padding for logo clearance */
+  .header-wrapper {
+    padding-top: calc(env(safe-area-inset-top) + 8px);
+  }
+}
+
+/* Ticker text colour override for light theme (ensure visibility) */
+body.theme-light .ticker-inner p,
+body.theme-light .ticker-inner a {
+  color: var(--color-primary) !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-nav-toggle .toggle-label {
+    top: -130% !important; /* label above icon to avoid overlap */
+  }
+  .mobile-sidebar-toggle .toggle-label {
+    top: 110% !important; /* keep below */
+  }
+}
+
+/* ===== Footer Reveal Animation (mobile & desktop) ===== */
+.footer-reveal {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-accent);
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  z-index: 1900;
+  pointer-events: none;
+}
+.footer-reveal.reveal {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ================= LABEL OFFSET FINAL OVERRIDE ================= */
+@media (max-width: 768px) {
+  /* Allow labels to overflow */
+  .mobile-nav-toggle,
+  .mobile-sidebar-toggle {
+    overflow: visible !important;
+  }
+
+  .mobile-nav-toggle .toggle-label {
+    top: calc(-100% + 28px) !important; /* place ~20px above bottom of circle */
+  }
+  .mobile-sidebar-toggle .toggle-label {
+    top: calc(100% + 4px) !important; /* 4px gap below */
+  }
+}
+
+.content-wrapper > .main-content {
+  padding-bottom: calc(var(--footer-height, 100px) + 1rem);
+}
+
+/* Mobile footer scroll if taller than viewport */
+@media (max-width: 768px) {
+  .footer-reveal {
+    max-height: 70vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ===== Footer colour harmonisation ===== */
+.footer-reveal {
   color: var(--color-on-surface);
+  background: var(--color-surface);
+}
+.footer-reveal a {
+  color: var(--color-on-surface);
+}
+.footer-reveal h3 {
+  color: var(--color-accent);
+}
+
+/* ---------- FINAL Light theme polish ---------- */
+body.theme-light .header-slogan {
+  color: var(--color-accent) !important;
+}
+
+body.theme-light .footer-reveal,
+body.theme-light .footer-reveal p,
+body.theme-light .footer-reveal li,
+body.theme-light .footer-reveal a,
+body.theme-light .footer-reveal span {
+  color: var(--core-color) !important;
+}
+
+body.theme-light .ticker-inner p,
+body.theme-light .ticker-inner a {
+  color: var(--core-color) !important;
+}
+body.theme-light .ticker-inner a:hover {
+  color: var(--color-accent) !important;
+}
+
+body.theme-dark .card-list-icon {
+  filter: invert(80%);
+}
+
+/* Utility text color that follows theme tokens */
+@layer utilities {
+  .text-on-surface {
+    color: var(--color-on-surface);
+  }
+
+  /* garante contraste no tema claro mesmo se algum componente usar text-white */
+  .theme-light .text-white {
+    color: var(--color-on-surface) !important;
+  }
+
+  /* Cabeçalho em fundo claro e links visíveis */
+  body.theme-light .header-wrapper {
+    background: var(--color-surface) !important;
+  }
+  body.theme-light .nav-menu a {
+    color: var(--color-accent) !important;
+  }
+
+  /* Sidebar (desktop e mobile) em fundo claro */
+  body.theme-light .sidebar {
+    background: var(--color-surface) !important;
+  }
+
+  /* Ícones dentro da sidebar e botões flutuantes */
+  body.theme-light .sidebar-nav svg,
+  body.theme-light .mobile-nav-toggle svg,
+  body.theme-light .mobile-sidebar-toggle svg {
+    color: var(--color-on-surface) !important;
+  }
+
+  /* Converte seções bg-gray-800 / 700 para superfícies claras */
+  body.theme-light .bg-gray-800,
+  body.theme-light .bg-gray-700,
+  body.theme-light .bg-\[\#141c2f\],
+  body.theme-light .bg-\[\#0a0f1d\],
+  body.theme-light .bg-\[\#1a2338\] {
+    background: var(--card-bg) !important;
+    color: var(--color-on-surface) !important;
+  }
+
+  /* Corrige bordas e sombras escuras herdadas */
+  body.theme-light .border-\[\#2a3448\] {
+    border-color: var(--card-border) !important;
+  }
+
+  /* Garante que textos cinza-escuros fiquem legíveis em tema claro */
+  body.theme-light .text-gray-200,
+  body.theme-light .text-gray-300,
+  body.theme-light .text-gray-400,
+  body.theme-light .text-gray-500 {
+    color: var(--color-on-surface) !important;
+  }
+}
+
+/* Nav menu links use accent colour in light mode for brand consistency */
+body.theme-light .nav-menu a {
+  color: var(--color-accent) !important;
+}
+
+/* Maintain readable colour for mobile overlay list items */
+body.theme-light .nav-menu-mobile .nav-item {
+  color: var(--color-on-surface) !important;
+}
+
+/* Simulator specific overrides */
+body.import-sim .ticker,
+body.import-sim .mobile-sidebar-toggle,
+body.import-sim .mobile-nav-toggle,
+body.import-sim .sidebar {
+  /* oculta ou desabilita ponteiros para evitar que capturem foco */
+  pointer-events: none !important;
+  opacity: 0.15;
+}
+body.import-sim .import-sim-container {
+  /* Espaçamento extra para empurrar o conteúdo para baixo do cabeçalho */
+  padding-top: calc(var(--height-header) + 0.5cm);
+  z-index: 3000;
+  position: relative;
+  /* Garante que âncoras rolem para posição correta */
+  scroll-margin-top: calc(var(--height-header) + 0.5cm);
+}
+body.import-sim .import-sim-heading {
+  color: var(--color-on-surface);
+}
+body.import-sim footer {
+  display: none !important;
+}
+
+/* ---------- Gold button for Specialist CTA ---------- */
+.btn-gold {
+  @apply btn;
+  background-color: #d4af37; /* gold */
+  color: #fff;
+}
+
+@keyframes goldPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212,175,55,0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(212,175,55,0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+}
+.animate-gold-pulse {
+  animation: goldPulse 2s infinite;
+}
+
+/* === UI UTILITIES 2025-06-xx === */
+.glass {
+  background: linear-gradient(145deg, rgba(15,21,38,0.9) 0%, rgba(27,35,55,0.9) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 18px rgba(212, 175, 55, 0.08);
+  border-radius: 0.75rem; /* rounded-xl */
+}
+.shadow-gold {
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.15);
+}
+.card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 22px rgba(212, 175, 55, 0.2);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+section#monitoramento .grid,
+section#dashboard .grid,
+section#compliance .grid,
+section#noticias .grid {
+  gap: 2.5rem; /* ~1cm visual spacing */
+}
+
+/* ---------- Section Spacing ---------- */
+.section + .section {
+  margin-top: 0.8cm; /* ≈30px */
+}
+
+/* card grid gap helper */
+.card-grid {
+  gap: 0.5cm;
+}
+
+/* Light theme variant for glass cards */
+body.theme-light .glass {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(199, 154, 48, 0.25);
+  box-shadow: 0 4px 14px rgba(199, 154, 48, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ---------- Unified Container ---------- */
+.container {
+  @apply max-w-6xl mx-auto px-4;
+}
+
+/* === Responsive logo sizing (keeps within header height) === */
+@media (min-width: 1024px) {
+  .logo-olv-padrao {
+    height: 72px !important;
+    width: auto !important;
+    max-height: calc(var(--height-header) - 4px);
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-olv-padrao {
+    height: 52px !important;
+    width: auto !important;
+  }
+}
+
+/* === Universal main-content top spacing for all pages === */
+body[class*="page-"] .main-content {
+  margin-top: calc(var(--height-header) + var(--height-ticker) + 0.8cm) !important;
+}
+
+/* === Spacing overrides for Soluções page === */
+/* body.solucoes-page .main-content { margin-top: calc(var(--height-header) + 0.5cm) !important; } */
+
+/* Markdown tables inside prose */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem; /* ~text-sm */
+}
+.prose thead tr {
+  border-bottom: 1px solid #3f3f46; /* neutral-700 */
+}
+.prose th {
+  text-align: left;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+}
+.prose td {
+  padding: 0.25rem 0.5rem;
+  vertical-align: top;
+}
+.prose tbody tr:nth-child(odd) {
+  background-color: rgba(39, 40, 48, 0.3); /* neutral-800/30 */
+}
+
+@media (max-width: 768px) {
+  .prose table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* =============================================================
+   FIX 2025-06-28 – Garante espaçamento do hero nas páginas com
+   classe "page-*" mesmo quando aplicada na div .app-container.
+   ============================================================= */
+@media (min-width: 769px) {
+  .app-container.faq-page .main-content,
+  .app-container.page-answer .main-content {
+    /* Hero a 0,8 cm abaixo do ticker em desktop (0,3 cm adicional) */
+    margin-top: 0.5cm !important; /* distância fixa */
+    padding-top: 0 !important; /* remove py top padding */
+  }
+}
+
+@media (min-width: 769px) {
+  /* Universal desktop content offset: header + ticker + 0.8cm */
+  .content-wrapper > .main-content {
+    margin-top: calc(var(--height-header) + var(--height-ticker) + 0.8cm) !important;
+    padding-top: 0 !important;
+  }
+}
+
+/* === Reset previous hero spacing attempts === */
+.app-container.page-answer .main-content {
+  margin-top: 0 !important;
+}
+
+/* Helper class: explicit hero offset for custom sections */
+@media (min-width: 769px) {
+  .page-hero-offset {
+    margin-top: calc(var(--height-header) + 50px) !important;
+  }
+
+  /* Override any page-level margin rules */
+  .app-container .content-wrapper > .main-content {
+    margin-top: 0 !important;
+  }
+
+  /* Universal: ensure every main content starts after header + ticker */
+  .content-wrapper > .main-content {
+    margin-top: 0 !important; /* override any previous margin */
+    padding-top: calc(var(--height-header) + 45px + 0.8cm) !important;
+  }
+}
+
+@media (min-width: 769px) {
+  /* Remove extra margin on first child inside main to keep 0.8cm spacing */
+  .content-wrapper > .main-content > *:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+}
+
+/* =============================================================
+   FIX 2025-06-29 – Normaliza espaçamento Header + Ticker + Hero
+   Aplica regras mínimas universais e corrige apenas FAQ e Answers
+   ============================================================= */
+@media (min-width: 769px) {
+  /* Regra padrão para TODO o website: Header + Ticker + 0,8 cm */
+  .content-wrapper > .main-content {
+    margin-top: calc(var(--height-header) + var(--height-ticker) + 0.8cm) !important;
+    padding-top: 0 !important;
+  }
+
+  /* Nenhuma exceção por enquanto; pages especiais podem adicionar suas próprias classes se precisarem */
+}
+
+/* =============================================================
+   FINAL OVERRIDE 2025-06-29 – garante 0,8 cm abaixo do ticker
+   ============================================================= */
+@media (min-width: 769px) {
+  .app-container .content-wrapper > .main-content {
+    margin-top: calc(var(--height-header) + var(--height-ticker) + 0.8cm) !important;
+    padding-top: 0 !important;
+  }
+}
+
+/* Blog Cards - Operação Blindada */
+.blog-card {
+  background: #ffffff;
+  color: #0a2540;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(10,37,64,0.08);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  border: 2px solid #FFD700;
+}
+.blog-card .blog-title {
+  color: #0a2540;
+  font-weight: 700;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+.blog-card .blog-excerpt {
+  color: #0a2540;
+  font-size: 1rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+.blog-card .blog-meta {
+  color: #0a2540;
+  font-size: 0.95rem;
+}
+body.dark .blog-card, body.theme-dark .blog-card {
+  background: #0a2540;
+  color: #fff;
+  border: 2px solid #FFD700;
+}
+body.dark .blog-card .blog-title, body.theme-dark .blog-card .blog-title {
+  color: #FFD700;
+}
+body.dark .blog-card .blog-excerpt, body.theme-dark .blog-card .blog-excerpt {
+  color: #fff;
+}
+body.dark .blog-card .blog-meta, body.theme-dark .blog-card .blog-meta {
+  color: #fff;
+}
+@media (max-width: 600px) {
+  .blog-card {
+    padding: 1rem 0.5rem;
+  }
+  .blog-card img {
+    min-height: 140px;
+    max-height: 220px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
+}
+
+.dark {
+  --olv-card-bg: #0a2540;
+  --olv-card-text: #fff;
+  --olv-card-meta: #e5e7ebcc;
+  --olv-card-heading: #fff;
+  --olv-card-img-bg: #111827;
+}
+
+/* Tema escuro com fundo azul escuro */
+body.theme-dark {
+  --olv-card-bg: #0a2540;
+  --olv-card-text: #fff;
+  --olv-card-meta: #e5e7ebcc;
+  --olv-card-heading: #fff;
+  --olv-card-img-bg: #111827;
+}
+
+/* Tema claro com texto azul escuro */
+body.theme-light {
+  --olv-card-bg: #ffffff;
+  --olv-card-text: #0a2540;
+  --olv-card-meta: #0a2540cc;
+  --olv-card-heading: #0a2540;
+  --olv-card-img-bg: #e5e7eb;
+}
+
+/* Blog container institucional */
+.pagination-blog {
+  margin-bottom: 2rem;
+}
+@media (max-width: 600px) {
+  .pagination-blog a {
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+    min-width: 36px;
+  }
+}
+
+/* Container institucional para o blog */
+.blog-main-content, .container.max-w-4xl {
+  max-width: 100vw;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 768px) {
+  .blog-main-content, .container.max-w-4xl {
+    max-width: 900px;
+    padding-left: 0;
+    padding-right: 0;
+  }
 } 
