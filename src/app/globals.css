@@ -913,6 +913,50 @@ body.theme-dark .card-list-icon {
   body.theme-light .text-gray-500 {
     color: var(--color-on-surface) !important;
   }
+
+  .bg-primary {
+    background-color: var(--color-primary) !important;
+  }
+  .text-primary {
+    color: var(--color-primary) !important;
+  }
+  .bg-on-primary {
+    background-color: var(--color-on-primary) !important;
+  }
+  .text-on-primary {
+    color: var(--color-on-primary) !important;
+  }
+  .bg-accent {
+    background-color: var(--color-accent) !important;
+  }
+  .text-accent {
+    color: var(--color-accent) !important;
+  }
+  .bg-surface {
+    background-color: var(--color-surface) !important;
+  }
+  .text-on-surface {
+    color: var(--color-on-surface) !important;
+  }
+  .bg-surface-light {
+    background-color: var(--color-surface-light) !important;
+  }
+  .text-surface-light {
+    color: var(--color-surface-light) !important;
+  }
+  .bg-stratevo {
+    background-color: var(--stratevo-color) !important;
+  }
+  .text-stratevo {
+    color: var(--stratevo-color) !important;
+  }
+  .bg-engage {
+    background-color: var(--engage-color) !important;
+  }
+  .text-engage {
+    color: var(--engage-color) !important;
+  }
+  /* Adicione outras utilitárias de cor de marca se necessário */
 }
 
 /* Nav menu links use accent colour in light mode for brand consistency */
