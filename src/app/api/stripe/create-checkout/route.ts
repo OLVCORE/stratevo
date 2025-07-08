@@ -38,7 +38,6 @@ export async function POST(request: NextRequest) {
     const selectedPlan = plans[plan as keyof typeof plans]
     
     if (selectedPlan.price === 0) {
-      // Plano gratuito - atualizar diretamente
       user.plan = plan
       user.reportsLimit = selectedPlan.reportsLimit
       await user.save()
@@ -49,12 +48,18 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Criar sessão do Stripe
+    if (!('stripePriceId' in selectedPlan)) {
+      return NextResponse.json(
+        { message: 'Plano sem stripePriceId configurado' },
+        { status: 400 }
+      )
+    }
+
     const stripeSession = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
-          price: selectedPlan.stripePriceId,
+          price: (selectedPlan as typeof plans['standard']).stripePriceId,
           quantity: 1,
         },
       ],
