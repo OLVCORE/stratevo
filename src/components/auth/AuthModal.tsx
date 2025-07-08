@@ -4,7 +4,12 @@ import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 import { FaGoogle, FaFacebook, FaLinkedin } from 'react-icons/fa'
 
-export default function AuthModal({ open, onClose }) {
+interface AuthModalProps {
+  open: boolean
+  onClose: () => void
+}
+
+export default function AuthModal({ open, onClose }: AuthModalProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
