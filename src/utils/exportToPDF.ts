@@ -1,5 +1,10 @@
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
+import { cleanCnpj } from 'CAMINHO_DO_UTILS'
+
+declare global {
+  var mongoose: any;
+}
 
 export function exportToPDF(data: any[], filename = 'relatorio.pdf'): Uint8Array {
   const doc = new jsPDF()
