@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  title: STRATEVO API
+  version: 1.0.0
+  description: API para geração de relatórios de inteligência de negócios
+paths:
+  /api/reports:
+    get:
+      summary: Lista relatórios do usuário autenticado
+      responses:
+        '200':
+          description: Lista de relatórios
+    post:
+      summary: Cria um novo relatório
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cnpj:
+                  type: string
+                website:
+                  type: string
+      responses:
+        '201':
+          description: Relatório criado
+  /api/reports/{id}:
+    get:
+      summary: Detalha um relatório específico
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados do relatório 
