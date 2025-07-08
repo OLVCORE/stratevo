@@ -1,16 +1,1 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/api/auth/signup/route": "app/api/auth/signup/route.js",
-  "/api/reports/export/route": "app/api/reports/export/route.js",
-  "/api/dashboard/stats/route": "app/api/dashboard/stats/route.js",
-  "/api/reports/route": "app/api/reports/route.js",
-  "/api/stripe/create-checkout/route": "app/api/stripe/create-checkout/route.js",
-  "/api/stripe/webhook/route": "app/api/stripe/webhook/route.js",
-  "/auth/signin/page": "app/auth/signin/page.js",
-  "/auth/signup/page": "app/auth/signup/page.js",
-  "/page": "app/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/pricing/page": "app/pricing/page.js",
-  "/reports/[id]/page": "app/reports/[id]/page.js"
-}
+{}
