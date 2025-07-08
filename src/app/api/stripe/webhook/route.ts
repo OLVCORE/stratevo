@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe, plans } from '@/lib/stripe'
 import { connectDB } from '@/lib/db'
 import User from '@/lib/models/User'
+import type Stripe from 'stripe'
 
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     switch (event.type) {
       case 'checkout.session.completed':
-        const session = event.data.object
+        const session = event.data.object as Stripe.Checkout.Session
         const userId = session.metadata?.userId
         const plan = session.metadata?.plan
 
