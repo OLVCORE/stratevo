@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     }
 
     await connectDB()
-    const userId = session.user.id
+    const userId = session.user.email
 
     // Total de relatórios
     const totalReports = await Report.countDocuments({ userId })
@@ -52,7 +52,10 @@ export async function GET(request: NextRequest) {
       monthlyReports
     })
   } catch (error) {
-    console.error('Erro ao carregar estatísticas:', error)
-    return NextResponse.json({ message: 'Erro interno do servidor' }, { status: 500 })
+    console.error('Erro ao buscar estatísticas do dashboard:', error)
+    return NextResponse.json(
+      { message: 'Erro interno do servidor' },
+      { status: 500 }
+    )
   }
 } 
