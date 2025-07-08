@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Check, Star, Zap, Crown, Users, Globe } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { loadStripe } from '@stripe/stripe-js'
 
 const plans = [
   {
