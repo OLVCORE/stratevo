@@ -106,7 +106,7 @@ export default function ReportDetail() {
     return Object.entries(data).map(([key, value]) => ({
       campo: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
       valor: typeof value === 'object' ? JSON.stringify(value) : String(value),
-      link: value === null ? undefined : value
+      link: (typeof value === 'string' && value.startsWith('http')) ? value : undefined
     }))
   }
 
@@ -167,7 +167,7 @@ export default function ReportDetail() {
         {activeTab === 'swot' ? (
           <SWOTAnalysis data={report.data.swot} />
         ) : (
-          <ReportTable data={formatDataForTable(report.data[activeTab])} />
+          <ReportTable data={formatDataForTable(report.data[activeTab as keyof typeof report.data])} />
         )}
       </div>
 

@@ -1,37 +1,33 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
   darkMode: 'class',
+  content: [
+    "./apps/frontend/pages/**/*.{js,ts,jsx,tsx}",
+    "./apps/frontend/components/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {
       colors: {
-        primary: {
-          500: '#1B3F8B',
-        },
-        accent: {
-          500: '#e0c178',
-        },
-        surface: {
-          900: '#0d1117',
-          800: '#11161e',
-          700: '#1a1f29',
-          100: '#f8fafc',
-        },
-        stratevo: '#1B3F8B',
-        engage: '#6A3C63',
+        primary: "#1A237E",
+        secondary: "#3949AB",
+        accent: "#FFD600",
+        background: "#181C2A",
+        surface: "#23263A",
+        muted: "#F5F7FA",
+        success: "#00C853",
+        warning: "#FFD600",
+        error: "#D32F2F",
+        info: "#29B6F6",
+        // Adicione outros tokens conforme a identidade OLV
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Poppins', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'Roboto', 'sans-serif'],
       },
+      borderRadius: {
+        xl: "1rem",
+        '2xl': "1.5rem",
+      }
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [],
 } 

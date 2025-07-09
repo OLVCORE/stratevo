@@ -28,6 +28,10 @@ interface ReceitaData {
   link?: string
 }
 
+function cleanCnpj(cnpj: string): string {
+  return cnpj.replace(/\D/g, '')
+}
+
 export async function getReceitaData(cnpj: string): Promise<ReceitaData | null> {
   try {
     // Limpar CNPJ (remover pontos, traços, barras)
@@ -77,7 +81,7 @@ export async function getReceitaData(cnpj: string): Promise<ReceitaData | null> 
     
     // Fallback para BrasilAPI
     try {
-      const brasilResponse = await axios.get(`https://brasilapi.com.br/api/cnpj/v1/${cleanCnpj}`)
+      const brasilResponse = await axios.get(`https://brasilapi.com.br/api/cnpj/v1/${cleanCnpj(cnpj)}`)
       
       if (brasilResponse.data) {
         return {
